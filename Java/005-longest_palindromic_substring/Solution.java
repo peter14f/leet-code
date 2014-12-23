@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -66,9 +67,115 @@ public class Solution {
         return ans;
     }
     
+    public String longestPalindromeDP(String s) {
+        boolean[][] palindrome = new boolean[s.length()][s.length()];
+        char[] sArr = s.toCharArray();
+        int palindromeLength = 0;
+        int palindromeStart = 0;
+        
+        // offset is the distance from diagonal
+        for (int offset=0; offset<s.length(); offset++) {
+            for (int row=0; row<s.length(); row++) {
+                if (offset==0) {
+                    // a substring of length 1 is always a palindrome
+                    palindrome[row][row+offset] = true;
+                    if (offset+1 > palindromeLength) {
+                        palindromeLength = offset+1;
+                        palindromeStart = row;
+                    }
+                }
+                else if (offset==1){
+                    /* a substring of length 2 is a palindrome
+                     * iff two characters are the same
+                     */
+                    if (row+offset < s.length() && 
+                            sArr[row] == sArr[row+offset]) {
+                        palindrome[row][row+offset] = true;
+                        if (offset+1 > palindromeLength) {
+                            palindromeLength = offset+1;
+                            palindromeStart = row;
+                        }
+                    }
+                }
+                else {
+                    /* the substring is a palindrome
+                     * iff s.substring(row+1, row+offset) is a palindrome AND
+                     *     sArr[row] == sArr[row+offset]
+                     */
+                    if (row+offset < s.length() && 
+                            palindrome[row+1][row+offset-1] && 
+                            sArr[row] == sArr[row+offset]) {
+                        palindrome[row][row+offset] = true;
+                        if (offset+1 > palindromeLength) {
+                            palindromeLength = offset+1;
+                            palindromeStart = row;
+                        }
+                    }
+                }
+            } // for row
+        } // for offset
+        
+        System.out.println(palindromeStart + " " + palindromeLength);
+        
+        return s.substring(palindromeStart, palindromeStart+palindromeLength);
+    }
+    
+    public String longestPalindromeNoExtraSpace(String s) {
+        int palindromeLength = 0;
+        int palindromeStart = 0;
+        char[] sArr = s.toCharArray();
+        
+        for (int center=0; center < s.length(); center++) {
+            /* middle = 1 means palindrome's mid point is between center and center+1
+             * middle = 0 means palindrome mid point is center
+             */
+            for (int middle=0; middle<2; middle++) {
+                int left, right;
+                
+                if (middle > 0) {
+                    left = center;
+                    right = center + 1;
+                }
+                else {
+                    left = center - 1;
+                    right = center + 1;
+                }
+                
+                int length;
+                
+                if (middle > 0) {
+                    length = 0;
+                    if (palindromeLength==0) {
+                        palindromeLength = 1;
+                        palindromeStart = center;
+                    }
+                }
+                else
+                    length = 1;
+                
+                while (left >=0 && right < s.length() && sArr[left] == sArr[right]) {
+                    length+=2;
+                    left --;
+                    right++;
+                }
+                
+                if (length > palindromeLength) {
+                    palindromeLength = length;
+                    palindromeStart = left+1;
+                }
+            }
+        }
+        
+        return s.substring(palindromeStart, palindromeStart+palindromeLength);
+    }
+    
     public static void main(String[] args) {
         Solution s = new Solution();
-        String ans = s.longestPalindrome("aaabaaaa");
+        //String ans = s.longestPalindrome("aaabaaaa");
+        
+        //String ans = s.longestPalindromeNoExtraSpace("ccc");
+        //ans = s.longestPalindromeNoExtraSpace("civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth");
+        String ans = s.longestPalindromeNoExtraSpace("a");
         System.out.println(ans);
     }
 }
