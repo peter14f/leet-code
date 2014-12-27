@@ -169,6 +169,70 @@ public class Solution {
         return s.substring(palindromeStart, palindromeStart+palindromeLength);
     }
     
+    public String longestPalindromeManacher(String s) {
+        StringBuffer sb = new StringBuffer();
+        
+        sb.append("#");
+        for (int i = 0; i < s.length(); i++) {
+            sb.append(s.charAt(i));
+            sb.append("#");
+        }
+        
+        char[] tArr = sb.toString().toCharArray();
+        
+        // p[i] is the number of characters on each side centering at i
+        int[] p = new int[tArr.length];
+        
+        /* we need to keep track of the palindrome found so far 
+         * whose right edge has the largest absolute index  
+         */
+        int c = 0; // center's index
+        int r = 0; // right edge's index
+        
+        for (int i=0; i<tArr.length; i++) {
+            // build p
+            
+            int iPrime = c - (i-c); // index of mirrored i
+
+            if (iPrime >= 0) {
+                if (i + p[iPrime] > r) {
+                    p[i] = r - i; // start with dist(right edge to center)
+                }
+                else {
+                    p[i] = p[iPrime];
+                }
+            }
+            
+            // Attempt to expand palindrome centered at i
+            while (i - 1 - p[i] >= 0 &&
+                    i + 1 + p[i] < tArr.length &&
+                    tArr[i - 1 - p[i]] == tArr[i + 1 + p[i]]) {
+                
+                p[i]++;
+                
+            }
+            
+            // if palindrome centered at i expand past R,
+            // adjust center based on expanded palindrome.
+            if (i + p[i] > r) {
+              c = i;
+              r = i + p[i];
+            }
+        }
+        
+        int palindromeLength = 0;
+        int center = 0;
+        
+        for (int i=0; i<tArr.length; i++) {
+            if (p[i] > palindromeLength) {
+                palindromeLength = p[i];
+                center = i;
+            }
+        }
+        
+        return s.substring((center-palindromeLength)/2, (center-palindromeLength)/2 + palindromeLength);
+    }
+    
     public static void main(String[] args) {
         Solution s = new Solution();
         //String ans = s.longestPalindrome("aaabaaaa");
@@ -176,6 +240,8 @@ public class Solution {
         //String ans = s.longestPalindromeNoExtraSpace("ccc");
         //ans = s.longestPalindromeNoExtraSpace("civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth");
         String ans = s.longestPalindromeNoExtraSpace("a");
+        //ans = s.longestPalindromeManacher("babcbabcbaccba");
+        ans = s.longestPalindromeManacher("a");
         System.out.println(ans);
     }
 }
