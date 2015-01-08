@@ -11,6 +11,8 @@
 .project
 .metadata
 .classpath
+.recommenders
+.settings
 
 # temp files #
 ##############
