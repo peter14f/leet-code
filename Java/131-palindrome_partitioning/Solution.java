@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,22 +40,10 @@ public class Solution {
             }
         }
         
-        
-        
         LinkedList<List<String>> ans = new LinkedList<List<String>>();
+        LinkedList<String> list = new LinkedList<String>();
         
-        // go through each row in the last col
-        for (int row=0; row<n; row++) {
-            if (tab[row][n-1]) {
-                LinkedList<String> list = new LinkedList<String>();
-                list.addFirst(String.copyValueOf(s_arr, row, n-row));
-                
-                if (row==0)
-                    ans.add(list);
-                else
-                    attemptToBuildSolution(list, tab, s_arr, row-1, ans, n);
-            }
-        }
+        attemptToBuildSolution(list, tab, s_arr, n-1, ans, n);
         
         return ans;
     }
@@ -67,16 +54,22 @@ public class Solution {
             int col, LinkedList<List<String>> ans,
             int n) {
         
+        int originalSize = list.size();
+        
         // go through each row in col
         for (int row=0; row<=col; row++) {
             if (tab[row][col]) {
-                LinkedList<String> newList = new LinkedList<String>(list);
-                newList.addFirst(String.copyValueOf(s_arr, row, col-row+1));
+                list.addFirst(String.copyValueOf(s_arr, row, col-row+1));
                 
-                if (row==0)
-                    ans.add(newList);
-                else
-                    attemptToBuildSolution(newList, tab, s_arr, row-1, ans, n);
+                if (row==0) {
+                    ans.add(new LinkedList<String>(list));
+                    list.removeFirst();
+                }
+                else {
+                    attemptToBuildSolution(list, tab, s_arr, row-1, ans, n);
+                    if (list.size() > originalSize)
+                        list.removeFirst();
+                }
             }
         }
     }
