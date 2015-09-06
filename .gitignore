@@ -17,3 +17,7 @@
 # temp files #
 ##############
 *.swp
+
+# C executable #
+################
+a.out
