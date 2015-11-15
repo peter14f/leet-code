@@ -4,10 +4,12 @@ import java.util.List;
 
 public class SolutionRecursion {
     public List<Integer> grayCode(int n) {
-        if (n==1) {
+        
+        if (n < 0)
+            throw new IllegalArgumentException("n must be a non-negative integer");
+        if (n==0) {
             List<Integer> ans = new ArrayList<Integer>();
             ans.add(0);
-            ans.add(1);
             return ans;
         }
         else {
@@ -27,7 +29,7 @@ public class SolutionRecursion {
     
     public static void main(String[] args) {
         SolutionRecursion sol = new SolutionRecursion();
-        List<Integer> ans = sol.grayCode(500);
+        List<Integer> ans = sol.grayCode(1);
         System.out.println(ans);
     }
 
