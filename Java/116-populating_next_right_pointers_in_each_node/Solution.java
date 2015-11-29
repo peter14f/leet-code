@@ -9,47 +9,53 @@ public class Solution {
      */
     public void connect(TreeLinkNode root) {
         
-        List<TreeLinkNode> nodes = new ArrayList<TreeLinkNode>();
+        if (root == null)
+            return;
         
-        int cnt = 0;
-        if (root != null) {
-            nodes.add(root);
-            cnt = 1;
-        }
+        TreeLinkNode listHead = root;
         
-        while (!nodes.isEmpty()) {
+        
+        while (listHead != null) {
             TreeLinkNode prev = null;
-            for (int i=0; i<cnt; i++) {
-                TreeLinkNode node = nodes.remove(0);
+            TreeLinkNode listCur = listHead;
+            
+            while (listCur != null) {
                 
-                if (node.left != null)
-                    nodes.add(node.left);
                 
-                if (node.right != null)
-                    nodes.add(node.right);
-                
-                if (prev != null) {
-                    prev.next = node; 
+                if (listCur.left != null) {
+                    
+                    if (prev != null)
+                        prev.next = listCur.left;
+                    
+                    listCur.left.next = listCur.right;
+                    prev = listCur.right;
                 }
                 
-                prev = node;
+                listCur = listCur.next;
             }
             
-            cnt = nodes.size();
+            listHead = listHead.left;
         }
-        
-        
     }
     
     public static void main(String[] args) {
+        TreeLinkNode zero = new TreeLinkNode(0);
         TreeLinkNode one = new TreeLinkNode(1);
         TreeLinkNode two = new TreeLinkNode(2);
         TreeLinkNode three = new TreeLinkNode(3);
+        TreeLinkNode four = new TreeLinkNode(4);
+        TreeLinkNode five = new TreeLinkNode(5);
+        TreeLinkNode six = new TreeLinkNode(6);
+        
+        zero.left = one;
+        zero.right = two;
+        
         
         one.left = two;
         one.right = three;
         
         Solution sol = new Solution();
+        
         sol.connect(one);
         
         System.out.println(one.next);
