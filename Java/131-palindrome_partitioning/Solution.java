@@ -1,82 +1,71 @@
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-
 
 public class Solution {
     public List<List<String>> partition(String s) {
-        int n = s.length();
-        char[] s_arr = s.toCharArray();
-        boolean[][] tab = new boolean[n][n];
         
-        // single character string is always a palindrome
-        for (int row=0; row<n; row++) {
-            tab[row][row] = true;
-        }
+        List<List<String>> partitions = new ArrayList<List<String>>();
+        if (s == null || s.length() == 0)
+            return partitions;
         
-        // two character string
+        char[] sArr = s.toCharArray();
+        int n = sArr.length;
+        boolean[][] isPalindrome = new boolean[n][n]; 
+        
         for (int row=0; row<n; row++) {
-            int col = row+1;
-            if (col < n) {
-                if (s_arr[row] == s_arr[col]) {
-                    tab[row][col] = true;
+            isPalindrome[row][row] = true;
+            if (row+1 < n) {
+                if (sArr[row] == sArr[row+1]) {
+                    isPalindrome[row][row+1] = true;
                 }
             }
         }
         
-        /* now s[i..j] is a palindrome if
-        ** s[i] == s[j] and s[i+1..j-1] is a palindrome
-        */
-        // consider strings of lengths 2..n
-        for (int l=3; l<=n; l++) {
-            for (int row=0; row<n; row++) {
-                int col = row + l - 1;
-                
-                if (col < n && 
-                    s_arr[row] == s_arr[col] &&
-                    tab[row+1][col-1]) {
-                    tab[row][col] = true;
+        int dist = 2;
+        
+        while (dist < n) {
+            for (int row=0; row < n; row++) {
+                if (row + dist < n) {
+                    if (isPalindrome[row+1][row+dist-1] && sArr[row] == sArr[row+dist]) {
+                        isPalindrome[row][row+dist] = true;
+                    }
                 }
-                
             }
+            
+            dist++;
         }
         
-        LinkedList<List<String>> ans = new LinkedList<List<String>>();
-        LinkedList<String> list = new LinkedList<String>();
+        dfs(sArr, isPalindrome, 0, new ArrayList<String>(), partitions);
         
-        attemptToBuildSolution(list, tab, s_arr, n-1, ans, n);
-        
-        return ans;
+        return partitions;
     }
     
-    private void attemptToBuildSolution(
-            LinkedList<String> list,
-            boolean[][] tab, char[] s_arr, 
-            int col, LinkedList<List<String>> ans,
-            int n) {
+    private void dfs(char[] sArr, boolean[][] isPalindrome, int start, 
+                     List<String> curList, List<List<String>> partitions) {
         
-        int originalSize = list.size();
+        int n = sArr.length;
         
-        // go through each row in col
-        for (int row=0; row<=col; row++) {
-            if (tab[row][col]) {
-                list.addFirst(String.copyValueOf(s_arr, row, col-row+1));
+        for (int col=start; col<n; col++) {
+            if (isPalindrome[start][col]) {
+                String str = new String(sArr, start, col-start+1);
+                curList.add(str);
                 
-                if (row==0) {
-                    ans.add(new LinkedList<String>(list));
-                    list.removeFirst();
+                if (col < n-1) {
+                    dfs(sArr, isPalindrome, col+1, curList, partitions);
                 }
                 else {
-                    attemptToBuildSolution(list, tab, s_arr, row-1, ans, n);
-                    if (list.size() > originalSize)
-                        list.removeFirst();
+                    partitions.add(new ArrayList<String>(curList));
                 }
+                
+                curList.remove(curList.size() - 1);
             }
         }
     }
 
     public static void main(String[] args) {
-        Solution s = new Solution();
-        List<List<String>> ans = s.partition("efe");
-        System.out.println(ans);
+        String s = "aab";
+        Solution sol = new Solution();
+        List<List<String>> partitions = sol.partition(s);
+        System.out.println(partitions);
     }
 }
