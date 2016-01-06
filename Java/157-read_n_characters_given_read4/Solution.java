@@ -5,20 +5,15 @@ public class Solution extends Reader4 {
      * called once
      */
     public int read(char[] buf, int n) {
-        int numLeft = n; // number of chars left to read
-        int tot = 0;     // number of chars copied into buf
+        int numWritten = n; // number of chars written into buffer
         char[] temp = new char[4];
         
-        while (numLeft > 0) {
+        while (numWritten < n) {
             int r = read4(temp);
             
             for (int i=0; i<r; i++) {
-                if (tot >= n)
-                    break;
-                
-                buf[tot] = temp[i];
-                tot++;
-                numLeft--;
+                buf[numWritten] = temp[i];
+                numWritten++;
             }
             
             if (r < 4) {
@@ -26,7 +21,7 @@ public class Solution extends Reader4 {
             }
         }
         
-        return tot;
+        return numWritten;
     }
     
     public static void main(String[] args) {
