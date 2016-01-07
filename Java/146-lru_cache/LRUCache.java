@@ -113,5 +113,4 @@ public class LRUCache {
         lru.set(2, 22);
         System.out.println(lru.get(2));
     }
-
 }

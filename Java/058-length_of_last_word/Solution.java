@@ -8,7 +8,7 @@ public class Solution {
         int i = s_arr.length - 1;
         
         if (s_arr.length==0)
-            return 0;
+            return cnt;
         
         while (s_arr[i] == ' ') {
             i--;

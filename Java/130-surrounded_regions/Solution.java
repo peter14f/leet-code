@@ -99,8 +99,6 @@ public class Solution {
             }
         }
         
-        System.out.println(Arrays.deepToString(blobs));
-        
         BlobProperties[] properties = new BlobProperties[maxBlobNum];
         for (int i=0; i<properties.length; i++) {
             BlobProperties b = new BlobProperties();

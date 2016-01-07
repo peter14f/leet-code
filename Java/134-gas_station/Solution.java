@@ -5,7 +5,6 @@ public class Solution {
         int n = gas.length;
         
         for (int start=0; start<n; start++) {
-            System.out.println("start=" + start);
             
             int tank = gas[start];
             int cur = start;
@@ -23,6 +22,8 @@ public class Solution {
                 tank += gas[cur];
             }
             
+            if (cur+1 <= start)
+                break;
             start = cur;
             tank = 0;
         }

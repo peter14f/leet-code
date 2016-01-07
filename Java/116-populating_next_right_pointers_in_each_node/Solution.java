@@ -14,10 +14,9 @@ public class Solution {
         
         TreeLinkNode listHead = root;
         
-        
         while (listHead != null) {
-            TreeLinkNode prev = null;
             TreeLinkNode listCur = listHead;
+            TreeLinkNode prev = null;
             
             while (listCur != null) {
                 

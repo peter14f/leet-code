@@ -45,6 +45,9 @@ public class Solution {
         }
         
         if (n > 0) {
+            if (newHead == null)
+                return head;
+            
             if (prevReverseTail != null) {
                 prevReverseTail.next = sublistHead;
             }

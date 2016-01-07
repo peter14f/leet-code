@@ -87,11 +87,6 @@ public class Solution {
             }
         }
         
-        
-        System.out.println("levels=" + levels);
-        System.out.println(neighbors.size());
-        System.out.println(levelWords);
-        
         List<List<String>> ans = new ArrayList<List<String>>();
         dfs(levelWords, 0, new ArrayList<String>(), neighbors, ans, levels, endWord);
         return ans;

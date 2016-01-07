@@ -1,84 +1,99 @@
+
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class Solution {
 
-    public int numDistinct(String S, String T) {
+    // count the number of distinct subsequences of t in s
+    public int numDistinct(String s, String t) {
+        char[] tArr = t.toCharArray();
+        char[] sArr = s.toCharArray();
+        
+        List<List<Integer>> indices = new ArrayList<List<Integer>>();
+        
         HashMap<Character, List<Integer>> map = new HashMap<Character, List<Integer>>();
+        HashSet<Character> tChars = new HashSet<Character>();
         
-        char[] sArr = S.toCharArray();
-        char[] tArr = T.toCharArray();
-        
-        if (sArr.length==0) {
-            if (tArr.length==0)
-                return 1;
-            else
-                return 0;
+        for (int i=0; i<tArr.length; i++) {
+            tChars.add(tArr[i]);
         }
         
         for (int i=0; i<sArr.length; i++) {
-            if (!map.containsKey(sArr[i]))
-                map.put(sArr[i], new ArrayList<Integer>());
-                
-            map.get(sArr[i]).add(i);
-        }
-        
-        List<List<Integer>> dp = new ArrayList<List<Integer>>();
-        
-        for (int i=0; i<tArr.length; i++) {
-            // S does not contain one character in T -> no solution
-            if (!map.containsKey(tArr[i]))
-                return 0;
+            char c = sArr[i];
             
-            List<Integer> indices = map.get(tArr[i]);
-            List<Integer> ways = new ArrayList<Integer>(indices.size());
-            
-            if (i==0) {
-                for (int j=0; j<indices.size(); j++)
-                    ways.add(1);
-            }
-            else {
-                List<Integer> curIndices = map.get(tArr[i]);
-                List<Integer> prevIndices = map.get(tArr[i-1]);
-                
-                for (int cur : curIndices) {
-                    List<Integer> prevWays = dp.get(i-1);
-                    int numWays = 0;
-                    
-                    for (int j=0; j<prevIndices.size(); j++) {
-                        if (prevIndices.get(j) < cur) {
-                            numWays += prevWays.get(j);
-                        }
-                    }
-                    
-                    ways.add(numWays);
+            if (tChars.contains(c)) {
+                if (map.containsKey(c)) {
+                    List<Integer> index = map.get(c);
+                    index.add(i);
+                }
+                else {
+                    List<Integer> index = new ArrayList<Integer>();
+                    index.add(i);
+                    map.put(c, index);
                 }
             }
+        }
+        
+        for (int i=0; i<tArr.length; i++) {
+            char c = tArr[i];
+            if (!map.containsKey(c))
+                return 0;
             
-            dp.add(ways);
+            indices.add(map.get(c));
         }
         
-        /* last character may have multiple indices
-         * need to sum up ways to reach all indices
-         */
-        List<Integer> lastCharWays = dp.get(tArr.length-1);
+        System.out.println(indices);
         
-        int sum = 0;
-        
-        for (int ways: lastCharWays) {
-            sum += ways;
-        }
-        
-        return sum;
+        int[] ans = {0};
+        countNumDistinctSubsequences(indices, 0, new ArrayList<Integer>(), ans);
+        return ans[0];
     }
     
-    public static void main(String[] args) {
-        Solution sol = new Solution();
+    private void countNumDistinctSubsequences(List<List<Integer>> indices, int i, List<Integer> curList, int[] ans) {
         
-        //int a = sol.numDistinct("rabbbit", "rabbit");
-        int a = sol.numDistinct("b", "a");
+        List<Integer> numbers = indices.get(i);
         
-        System.out.println(a);
+        if (numbers.isEmpty())
+            return;
+        
+        for (int j=0; j<numbers.size(); j++) {
+            int num = numbers.get(j);
+            
+            if (curList.isEmpty() || num > curList.get(curList.size() - 1)) {
+                curList.add(num);
+                
+                if (curList.size() == indices.size()) {
+                    ans[0]++;
+                }
+                else {
+                    countNumDistinctSubsequences(indices, i+1, curList, ans);
+                }
+                
+                curList.remove(curList.size() - 1);
+            }
+        }
+
     }
+    
+    /* TC LONG
+     * "daacaedaceacabbaabdccdaaeaebacddadcaeaacadbceaecddecdeedcebcdacdaebccdeebcbdeaccabcecbeeaadbccbaeccbbdaeadecabbbedceaddcdeabbcdaeadcddedddcececbeeabcbecaeadddeddccbdbcdcbceabcacddbbcedebbcaccac"
+     * "ceadbaa"
+     * 
+     * TC LONG
+     * "aabdbaabeeadcbbdedacbbeecbabebaeeecaeabaedadcbdbcdaabebdadbbaeabdadeaabbabbecebbebcaddaacccebeaeedababedeacdeaaaeeaecbe"
+     * "bddabdcae"
+     */
+    public static void main(String[] args) {
+        // TODO Auto-generated method stub
+        String s = "rabbbit";
+        String t = "rabbit";
+        
+        Solution sol = new Solution();
+        int num = sol.numDistinct(s, t);
+        System.out.println(num);
+    }
+
 }

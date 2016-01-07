@@ -17,7 +17,7 @@ public class Solution {
         
         
         int number = sArr[index] - '0';
-        if (number >= 1 && number <=26) {
+        if (number >= 1 && number <=9) {
             if (index == sArr.length - 1) {
                 ans[0]++;
             }
@@ -30,18 +30,19 @@ public class Solution {
         }
         
         if (index + 1 < sArr.length) {
-            number = 10*(sArr[index] - '0') + (sArr[index+1] - '0');
+            number = (sArr[index] - '0');
             
-            if (number >=1 && number <= 26) {
-                if (index + 1 == sArr.length - 1) {
-                    ans[0]++;
+            if (number == 1 || number == 2) {
+                number = 10*number + (sArr[index+1] - '0');
+                
+                if (number >=10 && number <= 26) {
+                    if (index + 1 == sArr.length - 1) {
+                        ans[0]++;
+                    }
+                    else {
+                        numDecodings(sArr, index+2, ans);
+                    }
                 }
-                else {
-                    numDecodings(sArr, index+2, ans);
-                }
-            }
-            else {
-                return;
             }
         }
     }

@@ -5,6 +5,7 @@ import java.util.HashSet;
 public class Solution {
 
     // O(n) time complexity using an array
+    // passes OJ
     public int lengthOfLongestSubstring(String s) {
         if (s.length()==0) {
             return 0;
@@ -37,6 +38,7 @@ public class Solution {
     }
     
     // O(n^2) time complexity
+    // does not pass OJ
     public int lengthOfLongestSubstring1(String s) {
         char[] sArr = s.toCharArray();
         
@@ -70,6 +72,7 @@ public class Solution {
     }
     
     // O(n) time complexity using a HashMap
+    // passes OJ.
     public int lengthOfLongestSubstring2(String s) {
         int max = 0;
         

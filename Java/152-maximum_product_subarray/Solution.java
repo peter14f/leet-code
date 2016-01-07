@@ -11,17 +11,27 @@ public class Solution {
             return 0;
         
         int max = nums[0];
-        int[] maxP = new int[nums.length];
-        int[] minP = new int[nums.length];
-        maxP[0] = nums[0];
-        minP[0] = nums[0];
+        
+        
+        int[] maxProduct = new int[nums.length];
+        int[] minProduct = new int[nums.length];
+        
+        /* maxProduct[i] is the largest product of some contiguous elements from [0, i] 
+         * with the ith element included.
+         * 
+         * minProduct[i] is the smallest product of some contiguous elements from [0, i] 
+         * with the ith element included.
+         */
+        
+        maxProduct[0] = nums[0];
+        minProduct[0] = nums[0];
         
         for (int i=1; i<nums.length; i++) {
-            maxP[i] = Math.max(nums[i], Math.max(maxP[i-1]*nums[i], minP[i-1]*nums[i]));
-            minP[i] = Math.min(nums[i], Math.min(maxP[i-1]*nums[i], minP[i-1]*nums[i]));
+            maxProduct[i] = Math.max(nums[i], Math.max(maxProduct[i-1]*nums[i], minProduct[i-1]*nums[i]));
+            minProduct[i] = Math.min(nums[i], Math.min(maxProduct[i-1]*nums[i], minProduct[i-1]*nums[i]));
             
-            if (maxP[i] > max)
-                max = maxP[i];
+            if (maxProduct[i] > max)
+                max = maxProduct[i];
         }
         
         return max;

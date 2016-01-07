@@ -17,7 +17,7 @@ public class Solution extends Reader4 {
         int numWritten = 0; // number of chars written into buf
         boolean done = false;
                 
-        while (numWritten > n) {
+        while (numWritten < n) {
             if (q.isEmpty()) {
                 int k = read4(temp);
                 
@@ -25,7 +25,7 @@ public class Solution extends Reader4 {
                     done = true;
                 
                 for (int i=0; i<k; i++) {
-                    this.q.offer(temp[0]);
+                    this.q.offer(temp[i]);
                 }
             }
             

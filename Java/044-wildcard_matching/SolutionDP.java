@@ -45,8 +45,6 @@ public class SolutionDP {
             }
         }
         
-        System.out.println(Arrays.deepToString(dp));
-        
         return dp[s_arr.length][p_arr.length];
     }
     

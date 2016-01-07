@@ -2,27 +2,29 @@ import java.util.Stack;
 
 
 public class MinStack {
+
     Stack<Integer> stk;
-    Stack<Integer> indexStk;
+    Stack<Integer> min;
     
     public MinStack() {
         stk = new Stack<Integer>();
-        indexStk = new Stack<Integer>();
+        min = new Stack<Integer>();
     }
     
     public void push(int x) {
         stk.push(x);
         
-        if (indexStk.isEmpty())
-            indexStk.push(0);
-        else if (x < stk.get(indexStk.peek()))
-            indexStk.push(stk.size()-1);
+        if (min.isEmpty() || x <= min.peek()) {
+            min.push(x);
+        }
     }
 
     public void pop() {
-        if (indexStk.peek() == stk.size() - 1) {
-            indexStk.pop();
-        }
+        int top = stk.peek();
+        
+        if (min.peek() == top)
+            min.pop();
+        
         stk.pop();
     }
 
@@ -31,20 +33,26 @@ public class MinStack {
     }
 
     public int getMin() {
-        return stk.get(indexStk.peek());
+        return min.peek();
     }
     
     public static void main(String[] args) {
-        MinStack stk = new MinStack();
+        MinStack m = new MinStack();
         
-        stk.push(3);
-        stk.push(2);
-        stk.push(1);
+        m.push(3);
+        System.out.println(m.getMin());
+        m.push(2);
+        System.out.println(m.getMin());
+        m.push(1);
+        System.out.println(m.getMin());
+        m.push(1);
+        System.out.println(m.getMin());
         
-        System.out.println(stk.getMin());
-        stk.pop();
-        System.out.println(stk.getMin());
-        stk.pop();
-        System.out.println(stk.getMin());
+        m.pop();
+        System.out.println(m.getMin());
+        
+        m.pop();
+        System.out.println(m.getMin());
     }
+
 }

@@ -1,7 +1,7 @@
 
 public class Solution {
 
-    // multiple tranactions allowed
+    // multiple transactions allowed
     public int maxProfit(int[] prices) {
         
         int buyIndex = 0;

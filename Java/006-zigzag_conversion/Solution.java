@@ -1,67 +1,56 @@
+import java.util.Arrays;
+
 
 public class Solution {
-
-    /* There are 3 cases to consider
-     * 1) nRows = 1
-     * 2) nRows = 2
-     * 3) nRows > 2
-     */
-    public String convert(String s, int nRows) {
-        if (nRows==1)
+    
+    public String convert2(String s, int numRows) {
+        if (numRows==1)
             return s;
-        
-        char[] sArr = s.toCharArray();
-        
-        // how many sets of "-" and "/"
-        int howmany = (int)Math.ceil((double)s.length() / (nRows + (nRows - 2)));
-        
-        /* total number of rows needed,
-         * each set requires 1 + nRows - 2 rows
-         */
-        int gridSize = howmany * (nRows - 1);
-        
-        char[][] grid = new char[gridSize][nRows];
-        int row = 0;
-        int col = 0;
-        boolean zag = false;
-        
-        for (int i=0; i<sArr.length; i++) {
-            if (zag == false) {
-                grid[row][col] = sArr[i];
-                
-                col++;
-                
-                if (col == nRows) {
-                    zag = true;
-                    col-=2;
-                    row++;
-                }
-            }
-            else {
-                if (col==0) {
-                    // only possible when nRows == 2
-                    zag = false;
-                    grid[row][col] = sArr[i];
-                    col++;
-                }
-                else {
-                    grid[row][col] = sArr[i];
-                
-                    col--;
-                    row++;
-                
-                    if (col == 0)
-                        zag = false;
-                }
-            }
-        }
         
         StringBuffer sb = new StringBuffer();
         
-        for (int j = 0; j < nRows; j++) {
-            for (int i = 0; i < grid.length; i++) {
-                if (grid[i][j] != '\0') {
-                    sb.append(grid[i][j]);
+        int n = s.length();
+        
+        for (int row=0; row < numRows; row++) {
+            
+            if (row >= n)
+                break;
+            
+            // self
+            sb.append(s.charAt(row));
+            
+            if (row==0 || row==numRows-1) {
+                int downSteps = numRows - 1;
+                int upSteps = numRows - 1;
+                int index = row;
+                index += downSteps + upSteps;
+                while (index < n) {
+                    sb.append(s.charAt(index));
+                    index += downSteps + upSteps;
+                }
+            }
+            else {
+                // down -> up, up -> down
+                int part1Steps = 2*(numRows - 1 - row);
+                int part2Steps = 2*row;
+                
+                int index = row;
+                
+                
+                index += part1Steps;
+                boolean one = false;
+                
+                while (index < n) {
+                    sb.append(s.charAt(index));
+                    
+                    if (one) {
+                        index += part1Steps;
+                        one = false;
+                    }
+                    else {
+                        index += part2Steps;
+                        one = true;
+                    }
                 }
             }
         }
@@ -69,17 +58,79 @@ public class Solution {
         return sb.toString();
     }
     
-    public static void main(String[] argv) {
-        Solution sol = new Solution();
-        String input = "PAYPALISHIRING";
-        String output = sol.convert(input, 3);
-        System.out.println(output);
-        input = "ABC";
-        output = sol.convert(input, 2);
-        System.out.println(output);
+    public String convert(String s, int numRows) {
+        if (numRows == 1)
+            return s;
         
-        input = "ABCD";
-        output = sol.convert(input, 2);
-        System.out.println(output);
+        int numColsMiddle = numRows - 2;
+        
+        int n = s.length();
+        
+        int numCols = 0;
+        
+        int charsLeft = n;
+        while (charsLeft > 0) {
+            charsLeft -= numRows;
+            numCols++;
+            
+            for (int j=numColsMiddle; j>0; j--) {
+                if (charsLeft <= 0 ) {
+                    break;
+                }
+                charsLeft -= 1;
+                numCols++;
+            }
+        }
+        
+        char[][] board = new char[numRows][numCols];
+        
+        int row = -1;
+        int col = 0;
+        boolean down = true;
+        
+        for (int i=0; i<s.length(); i++) {
+            if (down && row == numRows - 1) {
+                down = false;
+            }
+            else if (!down && row==0) {
+                down = true;
+            }
+            
+            if (down) {
+                row++;
+            }
+            else {
+                row--;
+                col++;
+            }
+            
+            board[row][col] = s.charAt(i);
+        }
+        
+        StringBuffer sb = new StringBuffer();
+        for (int i=0; i < numRows; i++) {
+            for (int j=0; j < numCols; j++) {
+                if (board[i][j] != '\0')
+                    sb.append(board[i][j]);
+            }
+        }
+        
+        return sb.toString();
     }
+    
+    public static void main(String[] args) {
+        Solution sol = new Solution();
+        
+       // String s = "PAYPALISHIRING";
+        //String ans = sol.convert2(s, 4);
+        
+        //String s = "ABC";
+        //String ans = sol.convert2(s, 2);
+        
+        String s = "A";
+        String ans = sol.convert2(s, 2);
+        
+        System.out.println(ans);
+    }
+
 }
