@@ -1,6 +1,3 @@
-import java.util.HashSet;
-
-
 public class Solution {
 
     public boolean isUgly(int num) {
