@@ -2,29 +2,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-
 public class Solution {
 
     public List<Integer> inorderTraversal(TreeNode root) {
+        
         List<Integer> ans = new ArrayList<Integer>();
+        
+        if (root==null)
+            return ans;
+        
         Stack<TreeNode> stk = new Stack<TreeNode>();
         
-        TreeNode cur = root;
+        stk.push(root);
+        TreeNode cur = root.left;
         
-        while (true) {
-            if (cur==null && stk.isEmpty()) {
-                break;
-            }
+        while (cur != null || !stk.isEmpty()) {
             
-            if (cur==null) {
-                cur = stk.pop();
-                ans.add(cur.val);
-                cur = cur.right;
-                
-            }
-            else {
+            if (cur != null) {
                 stk.push(cur);
                 cur = cur.left;
+            }
+            else {
+                TreeNode top = stk.pop();
+                ans.add(top.val);
+                cur = top.right;
             }
         }
         
@@ -32,15 +33,21 @@ public class Solution {
     }
     
     public static void main(String[] args) {
-        TreeNode a1 = new TreeNode(1);
-        TreeNode a2 = new TreeNode(2);
-        TreeNode a3 = new TreeNode(3);
+        TreeNode a = new TreeNode(4);
+        TreeNode b = new TreeNode(2);
+        TreeNode c = new TreeNode(1);
+        TreeNode d = new TreeNode(3);
         
-        a1.right = a2;
-        a2.left = a3;
+        a.left = b;
+        b.left = c;
+        b.right = d;
+        
+        TreeNode e = new TreeNode(5);
+        
+        a.right = e;
         
         Solution sol = new Solution();
-        List<Integer> ans = sol.inorderTraversal(a1);
+        List<Integer> ans = sol.inorderTraversal(a);
         System.out.println(ans);
     }
 
