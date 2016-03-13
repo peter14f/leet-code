@@ -1,39 +1,35 @@
-import java.util.Arrays;
+    import java.util.Arrays;
 
 
 public class Solution {
 
     public int findDuplicate(int[] nums) {
         
-        int l = 1;
-        int h = nums.length-1;
-        
-        while (l < h) {
-            int m = l + (h-l)/2;
+        for (int i=0; i<nums.length; i++) {
+            int index = nums[i] - 1;
             
-            int cnt = 0;
-            
-            for (int i=0; i<nums.length; i++) {
-                if (nums[i] <= m)
-                    cnt++;
-            }
-            
-            if (cnt <= m) {
-                // repeated value must be in [m+1, h]
-                l = m + 1;
-            }
-            else {
-                // repeated value must be in [l, m]
-                h = m;
-            }
+            if (i != index) {
                 
+                if (nums[index] == nums[i])
+                    return nums[i];
+                else {
+                    swap(nums, i, index);
+                    i--; // decrement i because we want to check the new nums[i] again
+                }
+            }
         }
         
-        return h;
+        return Integer.MIN_VALUE;
+    }
+    
+    private void swap(int[] nums, int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
     
     public static void main(String[] args) {
-        int[] nums = {1, 2, 2};
+        int[] nums = {1, 2, 3, 1};
         
         Solution sol = new Solution();
         int dup = sol.findDuplicate(nums);
