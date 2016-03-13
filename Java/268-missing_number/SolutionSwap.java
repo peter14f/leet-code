@@ -4,13 +4,12 @@ public class SolutionSwap {
     public int missingNumber(int[] nums) {
         
         for (int i=0; i<nums.length; i++) {
-            if (nums[i] == nums.length) {
-                nums[i] = -1;
-                i--;
-            }
-            else if (nums[i] != i && nums[i] >= 0) {
-                swap(nums, nums[i], i);
-                i--;
+            int index = nums[i]; // this is the index nums[i] should be placed
+            
+            if (index !=i && index < nums.length) {
+                swap(nums, i, index);
+                i--; // decrement i because we want to check if the new nums[i] is at its
+                     // bucket as well
             }
         }
         
@@ -20,6 +19,8 @@ public class SolutionSwap {
             }
         }
         
+        // means that from for i in 0... nums.length-1, nums[i] = i
+        // the missing number must be nums.length
         return nums.length;
     }
     
