@@ -3,11 +3,62 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
-
 
 public class SolutionBFS {
 
+    public List<List<Integer>> verticalOrder2(TreeNode root) {
+        List<List<Integer>>  ans = new ArrayList<>();
+
+        if (root == null) {
+            return ans;
+        }
+
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        Queue<MyNode> q = new LinkedList<MyNode>();
+        int minCol = 0;
+        int maxCol = 0;
+        q.offer(new MyNode(root, 0));
+
+        // bfs
+        while (!q.isEmpty()) {
+            MyNode n = q.poll();
+
+            if (n.col < minCol) {
+                minCol = n.col;
+            }
+            if (n.col > maxCol) {
+                maxCol = n.col;
+            }
+
+            if (!map.containsKey(n.col)) {
+                map.put(n.col, new ArrayList<>());
+            }
+            map.get(n.col).add(n.node.val);
+            if (n.node.left != null) {
+                q.offer(new MyNode(n.node.left, n.col-1));
+            }
+            if (n.node.right != null) {
+                q.offer(new MyNode(n.node.right, n.col+1));
+            }
+        }
+
+        for (int i=minCol; i<= maxCol; i++) {
+            ans.add(map.get(i));
+        }
+        return ans;
+    }
+    
+    static class MyNode {
+        TreeNode node;
+        int col;
+        public MyNode(TreeNode node, int col) {
+            this.node = node;
+            this.col = col;
+        }
+    }
+    
     public List<List<Integer>> verticalOrder(TreeNode root) {
         List<List<Integer>> allLists = new ArrayList<List<Integer>>();
         
@@ -78,7 +129,7 @@ public class SolutionBFS {
         d.right = f;
         
         SolutionBFS sol = new SolutionBFS();
-        List<List<Integer>> ans = sol.verticalOrder(a);
+        List<List<Integer>> ans = sol.verticalOrder2(a);
         System.out.println(ans);
     }
 
